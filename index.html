@@ -141,14 +141,26 @@
     }
 
     math-field{
-      width:100%;
-      min-height:56px;
-      font-size:22px;
-      border:1px solid #d9e0ea;
-      border-radius:10px;
-      padding:10px;
-      background:#fff;
-    }
+  width:100%;
+  min-height:72px;
+  max-height:72px;
+
+  overflow-x:auto;
+  overflow-y:hidden;
+
+  white-space:nowrap;
+
+  font-size:32px;
+
+  padding:14px;
+
+  border-radius:16px;
+  border:2px solid #dfe3ea;
+
+  background:#fff;
+
+  box-sizing:border-box;
+}
 
     math-field[disabled]{
       opacity:.6;
