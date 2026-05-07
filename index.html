@@ -948,7 +948,29 @@ function step3IsCorrect(userInput){
   console.log("STEP3 USER:", user);
   console.log("STEP3 EXPECTED:", expected);
 
-  return user === expected;
+  if (user === expected) return true;
+
+  // Parche robusto para raíz cuadrada: a√x → (a/2)x^(-1/2)
+  if (currentExercise.type === "squareRoot"){
+    const coef = makeFrac(currentExercise.a, 2);
+
+    let expectedAlt;
+
+    if (coef.den === 1){
+      expectedAlt = `${coef.num}x^frac-1_2`;
+    } else {
+      expectedAlt = `frac${coef.num}_${coef.den}x^frac-1_2`;
+    }
+
+    // MathLive a veces manda -frac72 y otras frac-7_2
+    expectedAlt = expectedAlt.replace(/frac-(\d+)_(\d+)/g, "frac-$1_$2");
+
+    console.log("STEP3 ALT:", expectedAlt);
+
+    return user === expectedAlt;
+  }
+
+  return false;
 }
 
 function step4IsCorrect(userInput){
