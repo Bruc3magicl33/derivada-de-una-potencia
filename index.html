@@ -842,10 +842,18 @@ s = s.replace(/x\^\{\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac$1_$2");
   s = s.replace(/-\\frac\{(\d+)\}\{(\d+)\}/g, "frac-$1_$2");
   s = s.replace(/\\frac\{(-?\d+)\}\{(-?\d+)\}/g, "frac$1_$2");
 
-// Normalizaciones extra de MathLive
+// Normaliza fracciones compactas con denominador 2 o 3:
+// -frac72  -> frac-7_2
+// frac72   -> frac7_2
+// -frac9_2 -> frac-9_2
+
 s = s.replace(/-frac(\d+)([23])(?=x|$)/g, "frac-$1_$2");
-s = s.replace(/(^|[^-])frac(\d+)([23])(?=x|$)/g, "$1frac$2_$3");
+s = s.replace(/(^|[^-\d])frac(\d+)([23])(?=x|$)/g, "$1frac$2_$3");
 s = s.replace(/-frac(\d+)_(\d+)/g, "frac-$1_$2");
+
+// Extra: por si queda como fracción visual sin guion normalizado
+s = s.replace(/^-(\d+)\/([23])x/g, "frac-$1_$2x");
+s = s.replace(/^(\d+)\/([23])x/g, "frac$1_$2x");
 
   return s
     .replace(/\{/g,"")
@@ -941,36 +949,125 @@ if (currentExercise.a === -1){
   return user === expected || user === cleanOption1 || user === cleanOption2;
 }
 
-function step3IsCorrect(userInput){
-  const user = normalizeDerivativeStep3(userInput);
-  const expected = normalizeDerivativeStep3(currentExercise.steps[3]);
+function parseFracText(s){
+  s = String(s).replace(/\s+/g,"").replace(/−/g,"-");
 
-  console.log("STEP3 USER:", user);
-  console.log("STEP3 EXPECTED:", expected);
-
-  if (user === expected) return true;
-
-  // Parche robusto para raíz cuadrada: a√x → (a/2)x^(-1/2)
-  if (currentExercise.type === "squareRoot"){
-    const coef = makeFrac(currentExercise.a, 2);
-
-    let expectedAlt;
-
-    if (coef.den === 1){
-      expectedAlt = `${coef.num}x^frac-1_2`;
-    } else {
-      expectedAlt = `frac${coef.num}_${coef.den}x^frac-1_2`;
-    }
-
-    // MathLive a veces manda -frac72 y otras frac-7_2
-    expectedAlt = expectedAlt.replace(/frac-(\d+)_(\d+)/g, "frac-$1_$2");
-
-    console.log("STEP3 ALT:", expectedAlt);
-
-    return user === expectedAlt;
+  // -\frac72
+  let m = s.match(/^-?\\frac(\d+)(\d+)$/);
+  if (m){
+    const sign = s.startsWith("-") ? -1 : 1;
+    return makeFrac(sign * Number(m[1]), Number(m[2]));
   }
 
-  return false;
+  // -\frac{7}{2}
+  m = s.match(/^-?\\frac\{(\d+)\}\{(\d+)\}$/);
+  if (m){
+    const sign = s.startsWith("-") ? -1 : 1;
+    return makeFrac(sign * Number(m[1]), Number(m[2]));
+  }
+
+  // \frac{-7}{2}
+  m = s.match(/^\\frac\{(-?\d+)\}\{(-?\d+)\}$/);
+  if (m){
+    return makeFrac(Number(m[1]), Number(m[2]));
+  }
+
+  // -7/2
+  m = s.match(/^(-?\d+)\/(-?\d+)$/);
+  if (m){
+    return makeFrac(Number(m[1]), Number(m[2]));
+  }
+
+  // entero
+  m = s.match(/^-?\d+$/);
+  if (m){
+    return makeFrac(Number(s), 1);
+  }
+
+  return null;
+}
+
+function parseStep3Term(str){
+  let s = String(str)
+    .replace(/\s+/g,"")
+    .replace(/−/g,"-")
+    .replace(/\\left/g,"")
+    .replace(/\\right/g,"")
+    .replace(/\\dfrac/g,"\\frac");
+
+  // Caso sin x: constante
+  if (!s.includes("x")){
+    return {
+      coef: parseFracText(s),
+      exp: makeFrac(0,1)
+    };
+  }
+
+  const parts = s.split("x");
+  let coefRaw = parts[0];
+  let expRaw = parts.slice(1).join("x");
+
+  if (coefRaw === "") coefRaw = "1";
+  if (coefRaw === "-") coefRaw = "-1";
+
+  let coef = parseFracText(coefRaw);
+  if (!coef) return null;
+
+  let exp = makeFrac(1,1);
+
+  // x^{-\frac12}
+  let m = expRaw.match(/^\^\{-\\frac(\d)(\d)\}$/);
+  if (m) exp = makeFrac(-Number(m[1]), Number(m[2]));
+
+  // x^{-\frac{1}{2}}
+  m = expRaw.match(/^\^\{-\\frac\{(\d+)\}\{(\d+)\}\}$/);
+  if (m) exp = makeFrac(-Number(m[1]), Number(m[2]));
+
+  // x^{\frac12}
+  m = expRaw.match(/^\^\{\\frac(\d)(\d)\}$/);
+  if (m) exp = makeFrac(Number(m[1]), Number(m[2]));
+
+  // x^{\frac{1}{2}}
+  m = expRaw.match(/^\^\{\\frac\{(-?\d+)\}\{(-?\d+)\}\}$/);
+  if (m) exp = makeFrac(Number(m[1]), Number(m[2]));
+
+  // x^{-1/2}
+  m = expRaw.match(/^\^\{(-?\d+)\/(-?\d+)\}$/);
+  if (m) exp = makeFrac(Number(m[1]), Number(m[2]));
+
+  // x^-1/2
+  m = expRaw.match(/^\^(-?\d+)\/(-?\d+)$/);
+  if (m) exp = makeFrac(Number(m[1]), Number(m[2]));
+
+  // x^{-2}
+  m = expRaw.match(/^\^\{(-?\d+)\}$/);
+  if (m) exp = makeFrac(Number(m[1]), 1);
+
+  // x^-2
+  m = expRaw.match(/^\^(-?\d+)$/);
+  if (m) exp = makeFrac(Number(m[1]), 1);
+
+  return {coef, exp};
+}
+
+function sameFrac(a,b){
+  if (!a || !b) return false;
+  return a.num * b.den === b.num * a.den;
+}
+
+function step3IsCorrect(userInput){
+  const parsed = parseStep3Term(userInput);
+
+  console.log("PARSED STEP3:", parsed);
+  console.log("EXPECTED COEF:", currentExercise.derivativeCoef);
+  console.log("EXPECTED EXP:", currentExercise.derivativeExp);
+
+  if (!parsed) return false;
+
+  return (
+    sameFrac(parsed.coef, currentExercise.derivativeCoef) &&
+    sameFrac(parsed.exp, currentExercise.derivativeExp)
+  );
 }
 
 function step4IsCorrect(userInput){
