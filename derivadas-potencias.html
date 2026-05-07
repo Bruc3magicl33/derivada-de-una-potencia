@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Derivadas de Potencias - CETis 70</title>
+
+  <script type="module">
+    import 'https://esm.run/mathlive';
+  </script>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:#f6f8fb;
+      color:#1f2937;
+    }
+
+    .wrap{
+      max-width:1050px;
+      margin:0 auto;
+      padding:18px;
+    }
+
+    h1{ margin-bottom:4px; }
+
+    .author{
+      color:#6b7280;
+      font-weight:600;
+      margin-bottom:16px;
+    }
+
+    .card{
+      background:white;
+      border:1px solid #d9e0ea;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);
+    }
+
+    .filter-box{
+      border:1px solid #d9e0ea;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:14px;
+      background:#f9fafb;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+    }
+
+    .filter-title{
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .filter-box label{
+      display:block;
+      font-size:14px;
+      margin:4px 0;
+      cursor:pointer;
+    }
+
+    .new-exercise-top{
+      background:#2563eb;
+      color:#fff;
+      font-weight:700;
+      padding:14px 28px;
+      border-radius:999px;
+      box-shadow:0 4px 10px rgba(37,99,235,.22);
+      white-space:nowrap;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .problem{
+      font-size:30px;
+      text-align:center;
+      padding:20px;
+      border:1px dashed #d9e0ea;
+      border-radius:12px;
+      margin:16px 0;
+      min-height:90px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .formula-box{
+      background:#f8fafc;
+      border:1px solid #d9e0ea;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:14px;
+      font-size:20px;
+      text-align:center;
+    }
+
+    .step{
+      border:1px solid #d9e0ea;
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:14px;
+      background:#fff;
+    }
+
+    .step-header{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+
+    .step-title{
+      font-weight:700;
+      font-size:18px;
+    }
+
+    .attempts{
+      font-size:13px;
+      color:#6b7280;
+    }
+
+    math-field{
+      width:100%;
+      min-height:56px;
+      font-size:22px;
+      border:1px solid #d9e0ea;
+      border-radius:10px;
+      padding:10px;
+      background:#fff;
+    }
+
+    math-field[disabled]{
+      opacity:.6;
+      background:#f3f4f6;
+    }
+
+    button{
+      border:none;
+      border-radius:10px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-size:15px;
+      background:#2563eb;
+      color:white;
+      font-weight:700;
+    }
+
+    button:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    .btn-na{
+      background:#64748b;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+
+    .feedback{
+      font-size:15px;
+      font-weight:700;
+      min-height:22px;
+    }
+
+    .ok{ color:#15803d; }
+    .bad{ color:#b91c1c; }
+
+    .hint{
+      margin-top:6px;
+      color:#a16207;
+      font-size:14px;
+      min-height:18px;
+    }
+
+    @media (max-width:700px){
+      .filter-box{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .new-exercise-top{ width:100%; }
+      .problem{ font-size:24px; }
+      math-field{ font-size:20px; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <h1>Derivadas de Potencias - CETis 70</h1>
+  <div class="author">Creado por Ing. Antonio García Rodríguez</div>
+
+  <div class="card">
+    <div class="pill">Derivadas · potencias · radicales · exponentes negativos</div>
+
+    <div class="filter-box">
+      <div>
+        <div class="filter-title">Tipos de ejercicios:</div>
+        <label><input type="checkbox" value="simplePower" checked> Potencia simple: axⁿ</label>
+        <label><input type="checkbox" value="squareRoot" checked> Raíz cuadrada: a√x</label>
+        <label><input type="checkbox" value="cubeRoot" checked> Raíz cúbica: a∛x o a∛x²</label>
+        <label><input type="checkbox" value="reciprocal" checked> Fracción: a/xⁿ</label>
+      </div>
+
+      <div>
+        <button class="new-exercise-top" id="restartBtn">Nuevo ejercicio 🔄</button>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      Fórmula base: \( \frac{d}{dx}(ax^n)=a\cdot n x^{n-1} \)
+    </div>
+
+    <div class="problem" id="problemLatex"></div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-title">Paso 1. Convertir a potencia si es necesario</div>
+        <div class="attempts" id="attempts-1">Intentos: 0/3</div>
+      </div>
+      <math-field id="mf-1" virtual-keyboard-mode="off"></math-field>
+      <div class="actions">
+        <button id="btn-1">Revisar</button>
+        <div class="feedback" id="fb-1"></div>
+      </div>
+      <div class="hint" id="hint-1"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-title">Paso 2. Sustituir en la fórmula sin simplificar</div>
+        <div class="attempts" id="attempts-2">Intentos: 0/3</div>
+      </div>
+      <math-field id="mf-2" virtual-keyboard-mode="off" disabled></math-field>
+      <div class="actions">
+        <button id="btn-2" disabled>Revisar</button>
+        <div class="feedback" id="fb-2"></div>
+      </div>
+      <div class="hint" id="hint-2"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-title">Paso 3. Simplificar la derivada</div>
+        <div class="attempts" id="attempts-3">Intentos: 0/3</div>
+      </div>
+      <math-field id="mf-3" virtual-keyboard-mode="off" disabled></math-field>
+      <div class="actions">
+        <button id="btn-3" disabled>Revisar</button>
+        <div class="feedback" id="fb-3"></div>
+      </div>
+      <div class="hint" id="hint-3"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-title">Paso 4. Convertir exponentes negativos a positivos</div>
+        <div class="attempts" id="attempts-4">Intentos: 0/3</div>
+      </div>
+      <math-field id="mf-4" virtual-keyboard-mode="off" disabled></math-field>
+      <div class="actions">
+        <button id="btn-4" disabled>Revisar</button>
+        <button id="na-4" class="btn-na" disabled>No aplica</button>
+        <div class="feedback" id="fb-4"></div>
+      </div>
+      <div class="hint" id="hint-4"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-title">Paso 5. Convertir exponentes fraccionarios a radical si es necesario</div>
+        <div class="attempts" id="attempts-5">Intentos: 0/3</div>
+      </div>
+      <math-field id="mf-5" virtual-keyboard-mode="off" disabled></math-field>
+      <div class="actions">
+        <button id="btn-5" disabled>Revisar</button>
+        <button id="na-5" class="btn-na" disabled>No aplica</button>
+        <div class="feedback" id="fb-5"></div>
+      </div>
+      <div class="hint" id="hint-5"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentExercise = null;
+const attempts = {1:0,2:0,3:0,4:0,5:0};
+
+function randint(min,max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function choice(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function gcd(a,b){
+  a = Math.abs(a);
+  b = Math.abs(b);
+
+  while(b){
+    const t = b;
+    b = a % b;
+    a = t;
+  }
+
+  return a || 1;
+}
+
+function makeFrac(num, den){
+  if (den === 0) return {num:0, den:1};
+
+  if (den < 0){
+    num *= -1;
+    den *= -1;
+  }
+
+  const g = gcd(num, den);
+  num = num / g;
+  den = den / g;
+
+  return {num, den};
+}
+
+function mulFrac(a,b){
+  return makeFrac(a.num*b.num, a.den*b.den);
+}
+
+function subOne(exp){
+  return makeFrac(exp.num - exp.den, exp.den);
+}
+
+function fracLatex(f){
+  f = makeFrac(f.num, f.den);
+
+  if (f.den === 1) return `${f.num}`;
+  if (f.num < 0) return `-\\frac{${Math.abs(f.num)}}{${f.den}}`;
+  return `\\frac{${f.num}}{${f.den}}`;
+}
+
+function coefLatexForProduct(f){
+  f = makeFrac(f.num, f.den);
+
+  if (f.den === 1) return `${f.num}`;
+  if (f.num < 0) return `\\left(-\\frac{${Math.abs(f.num)}}{${f.den}}\\right)`;
+  return `\\left(\\frac{${f.num}}{${f.den}}\\right)`;
+}
+
+function expLatex(exp){
+  exp = makeFrac(exp.num, exp.den);
+
+  if (exp.den === 1) return `${exp.num}`;
+  return `\\frac{${exp.num}}{${exp.den}}`;
+}
+
+function powerLatex(exp){
+  exp = makeFrac(exp.num, exp.den);
+
+  if (exp.den === 1){
+    return `x^{${exp.num}}`;
+  }
+
+  return `x^{\\frac{${exp.num}}{${exp.den}}}`;
+}
+
+function termLatex(coef, exp){
+  coef = makeFrac(coef.num, coef.den);
+  exp = makeFrac(exp.num, exp.den);
+
+  if (coef.num === 0) return "0";
+
+  if (exp.num === 0){
+    return fracLatex(coef);
+  }
+
+  let c = "";
+
+  if (coef.den === 1){
+    if (coef.num === 1) c = "";
+    else if (coef.num === -1) c = "-";
+    else c = `${coef.num}`;
+  } else {
+    c = fracLatex(coef);
+  }
+
+  if (exp.den === 1 && exp.num === 1){
+    return `${c}x`;
+  }
+
+  return `${c}${powerLatex(exp)}`;
+}
+
+function substitutionLatex(coef, exp){
+  coef = makeFrac(coef.num, coef.den);
+  exp = makeFrac(exp.num, exp.den);
+
+  const newExpRaw = `${expLatex(exp)}-1`;
+  return `${fracLatex(coef)}${coefLatexForProduct(exp)}x^{${newExpRaw}}`;
+}
+
+function positivePowerForm(coef, exp){
+  coef = makeFrac(coef.num, coef.den);
+  exp = makeFrac(exp.num, exp.den);
+
+  if (coef.num === 0) return "0";
+
+  if (exp.num >= 0){
+    return termLatex(coef, exp);
+  }
+
+  const posExp = makeFrac(-exp.num, exp.den);
+  const absCoefNum = Math.abs(coef.num);
+
+  let denominator = "";
+
+  if (coef.den === 1){
+    denominator = powerLatex(posExp);
+    let ans = `\\frac{${absCoefNum}}{${denominator}}`;
+    if (coef.num < 0) ans = `-${ans}`;
+    return ans;
+  }
+
+  denominator = `${coef.den}${powerLatex(posExp)}`;
+  let ans = `\\frac{${absCoefNum}}{${denominator}}`;
+  if (coef.num < 0) ans = `-${ans}`;
+  return ans;
+}
+
+function radicalPower(exp){
+  exp = makeFrac(exp.num, exp.den);
+
+  if (exp.den === 1){
+    if (exp.num === 1) return "x";
+    return `x^{${exp.num}}`;
+  }
+
+  if (exp.den === 2){
+    if (exp.num === 1) return `\\sqrt{x}`;
+    return `\\sqrt{x^{${exp.num}}}`;
+  }
+
+  if (exp.den === 3){
+    if (exp.num === 1) return `\\sqrt[3]{x}`;
+    return `\\sqrt[3]{x^{${exp.num}}}`;
+  }
+
+  return powerLatex(exp);
+}
+
+function radicalFinalForm(coef, exp){
+  coef = makeFrac(coef.num, coef.den);
+  exp = makeFrac(exp.num, exp.den);
+
+  if (coef.num === 0) return "0";
+
+  if (exp.den === 1){
+    return positivePowerForm(coef, exp);
+  }
+
+  if (exp.num >= 0){
+    let c = "";
+
+    if (coef.den === 1){
+      if (coef.num === 1) c = "";
+      else if (coef.num === -1) c = "-";
+      else c = `${coef.num}`;
+    } else {
+      c = fracLatex(coef);
+    }
+
+    return `${c}${radicalPower(exp)}`;
+  }
+
+  const posExp = makeFrac(-exp.num, exp.den);
+  const rad = radicalPower(posExp);
+  const absCoefNum = Math.abs(coef.num);
+
+  let denominator = "";
+
+  if (coef.den === 1){
+    denominator = rad;
+    let ans = `\\frac{${absCoefNum}}{${denominator}}`;
+    if (coef.num < 0) ans = `-${ans}`;
+    return ans;
+  }
+
+  denominator = `${coef.den}${rad}`;
+  let ans = `\\frac{${absCoefNum}}{${denominator}}`;
+  if (coef.num < 0) ans = `-${ans}`;
+  return ans;
+}
+
+function prettyOriginal(type, a, n, rootPower){
+  if (type === "simplePower"){
+    if (n === 1){
+      if (a === 1) return "x";
+      if (a === -1) return "-x";
+      return `${a}x`;
+    }
+
+    if (a === 1) return `x^${n}`;
+    if (a === -1) return `-x^${n}`;
+    return `${a}x^${n}`;
+  }
+
+  if (type === "squareRoot"){
+    if (a === 1) return `\\sqrt{x}`;
+    if (a === -1) return `-\\sqrt{x}`;
+    return `${a}\\sqrt{x}`;
+  }
+
+  if (type === "cubeRoot"){
+    const inside = rootPower === 1 ? "x" : `x^${rootPower}`;
+    if (a === 1) return `\\sqrt[3]{${inside}}`;
+    if (a === -1) return `-\\sqrt[3]{${inside}}`;
+    return `${a}\\sqrt[3]{${inside}}`;
+  }
+
+  if (type === "reciprocal"){
+    if (n === 1){
+      return `\\frac{${a}}{x}`;
+    }
+
+    return `\\frac{${a}}{x^${n}}`;
+  }
+
+  return "";
+}
+
+function getSelectedTypes(){
+  const checks = document.querySelectorAll('.filter-box input[type="checkbox"]:checked');
+  let selected = [];
+  checks.forEach(c => selected.push(c.value));
+
+  if (selected.length === 0){
+    return ["simplePower"];
+  }
+
+  return selected;
+}
+
+function buildExercise(){
+  const type = choice(getSelectedTypes());
+
+  let a = choice([-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9]);
+  let n = randint(1,8);
+  let rootPower = 1;
+
+  let initialExp;
+
+  if (type === "simplePower"){
+    initialExp = makeFrac(n,1);
+  }
+
+  if (type === "squareRoot"){
+    initialExp = makeFrac(1,2);
+  }
+
+  if (type === "cubeRoot"){
+    rootPower = choice([1,2]);
+    initialExp = makeFrac(rootPower,3);
+  }
+
+  if (type === "reciprocal"){
+    n = randint(1,5);
+    initialExp = makeFrac(-n,1);
+  }
+
+  const coef = makeFrac(a,1);
+  const derivativeCoef = mulFrac(coef, initialExp);
+  const derivativeExp = subOne(initialExp);
+
+  const original = prettyOriginal(type, a, n, rootPower);
+
+  const step1 = termLatex(coef, initialExp);
+  const step2 = substitutionLatex(coef, initialExp);
+  const step3 = termLatex(derivativeCoef, derivativeExp);
+  const step4 = positivePowerForm(derivativeCoef, derivativeExp);
+  const step5 = radicalFinalForm(derivativeCoef, derivativeExp);
+
+  return {
+    type,
+    a,
+    n,
+    rootPower,
+    initialExp,
+    derivativeCoef,
+    derivativeExp,
+    problem:`\\frac{d}{dx}\\left(${original}\\right)`,
+    steps:{
+      1:step1,
+      2:step2,
+      3:step3,
+      4:step4,
+      5:step5
+    },
+    hints:{
+      1:"Convierte radicales o fracciones a forma de potencia xⁿ. Escribe solo la expresión, sin d/dx.",
+      2:"Sustituye en la fórmula sin simplificar: coeficiente · exponente · x^(exponente-1).",
+      3:"Ahora multiplica coeficientes y simplifica el exponente.",
+      4:"Si aparece exponente negativo, pásalo al denominador con exponente positivo.",
+      5:"Si aparece exponente fraccionario, conviértelo a radical."
+    }
+  };
+}
+
+function normalizeLatex(str){
+  let s = String(str);
+
+  s = s
+    .replace(/\s+/g,"")
+    .replace(/−/g,"-")
+    .replace(/－/g,"-")
+    .replace(/–/g,"-")
+    .replace(/—/g,"-")
+    .replace(/\\left/g,"")
+    .replace(/\\right/g,"")
+    .replace(/\\cdot/g,"")
+    .replace(/\\times/g,"")
+    .replace(/\\,/g,"")
+    .replace(/\\:/g,"")
+    .replace(/\\;/g,"")
+    .replace(/\\dfrac/g,"\\frac");
+
+  // x^{\frac{1}{2}}
+  s = s.replace(/x\^\{\\frac\{(-?\d+)\}\{(-?\d+)\}\}/g, "x^frac$1_$2");
+
+  // x^{-\frac{2}{3}}
+  s = s.replace(/x\^\{-\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac-$1_$2");
+
+  // x^{\frac{-2}{3}}
+  s = s.replace(/x\^\{\\frac\{-(\d+)\}\{(\d+)\}\}/g, "x^frac-$1_$2");
+
+  // x^\frac{1}{2}
+  s = s.replace(/x\^\\frac\{(-?\d+)\}\{(-?\d+)\}/g, "x^frac$1_$2");
+
+  // x^-\frac{2}{3}
+  s = s.replace(/x\^-\\frac\{(\d+)\}\{(\d+)\}/g, "x^frac-$1_$2");
+
+  // x^{1/2}
+  s = s.replace(/x\^\{(-?\d+)\/(-?\d+)\}/g, "x^frac$1_$2");
+
+  // x^{-2/3}
+  s = s.replace(/x\^\{-(\d+)\/(\d+)\}/g, "x^frac-$1_$2");
+
+  // x^(1/2)
+  s = s.replace(/x\^\((-?\d+)\/(-?\d+)\)/g, "x^frac$1_$2");
+
+  // x^1/2
+  s = s.replace(/x\^(-?\d+)\/(-?\d+)/g, "x^frac$1_$2");
+
+  // x^{3}
+  s = s.replace(/x\^\{(-?\d+)\}/g,"x^$1");
+
+  // raíces
+  s = s
+    .replace(/\\sqrt\[3\]\{x\^\{?(\d+)\}?\}/g,"cuberootx^$1")
+    .replace(/\\sqrt\[3\]\{x\}/g,"cuberootx")
+    .replace(/\\sqrt\{x\^\{?(\d+)\}?\}/g,"sqrtx^$1")
+    .replace(/\\sqrt\{x\}/g,"sqrtx");
+
+// x^{\frac12} → x^frac1_2
+s = s.replace(/x\^\{\\frac(-?\d)(-?\d)\}/g, "x^frac$1_$2");
+
+// x^\frac12 → x^frac1_2
+s = s.replace(/x\^\\frac(-?\d)(-?\d)/g, "x^frac$1_$2");
+
+// x^{-\frac12} → x^frac-1_2
+s = s.replace(/x\^\{-\\frac(\d)(\d)\}/g, "x^frac-$1_$2");
+
+// x^-\frac12 → x^frac-1_2
+s = s.replace(/x\^-\\frac(\d)(\d)/g, "x^frac-$1_$2");
+
+  // fracciones normales
+  s = s.replace(/-\\frac\{(\d+)\}\{(\d+)\}/g,"frac-$1_$2");
+  s = s.replace(/\\frac\{(-?\d+)\}\{(-?\d+)\}/g,"frac$1_$2");
+
+  return s
+    .replace(/\{/g,"")
+    .replace(/\}/g,"")
+    .replace(/\(/g,"")
+    .replace(/\)/g,"")
+    .replace(/\\/g,"")
+    .replace(/\*/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function normalizeDerivativeSubstitution(str){
+  let s = String(str)
+    .replace(/\s+/g,"")
+    .replace(/−/g,"-")
+    .replace(/\\left/g,"")
+    .replace(/\\right/g,"")
+    .replace(/\\cdot/g,"")
+    .replace(/\\times/g,"")
+    .replace(/\\dfrac/g,"\\frac");
+
+  // Exponentes tipo x^{frac - 1}
+  s = s.replace(/x\^\{\\frac\{(-?\d+)\}\{(-?\d+)\}-1\}/g, "x^frac$1_$2-1");
+  s = s.replace(/x\^\{\\frac(-?\d+)(-?\d+)-1\}/g, "x^frac$1_$2-1");
+  s = s.replace(/x\^\{(-?\d+)\/(-?\d+)-1\}/g, "x^frac$1_$2-1");
+  s = s.replace(/x\^\((-?\d+)\/(-?\d+)-1\)/g, "x^frac$1_$2-1");
+
+  // Fracciones
+  s = s.replace(/\\frac\{(-?\d+)\}\{(-?\d+)\}/g, "frac$1_$2");
+  s = s.replace(/\\frac(-?\d+)(-?\d+)/g, "frac$1_$2");
+
+  return s
+    .replace(/\{/g,"")
+    .replace(/\}/g,"")
+    .replace(/\(/g,"")
+    .replace(/\)/g,"")
+    .replace(/\\/g,"")
+    .replace(/\*/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function normalizeDerivativeStep3(str){
+  let s = String(str)
+    .replace(/\s+/g,"")
+    .replace(/−/g,"-")
+    .replace(/\\left/g,"")
+    .replace(/\\right/g,"")
+    .replace(/\\cdot/g,"")
+    .replace(/\\times/g,"")
+    .replace(/\\dfrac/g,"\\frac");
+
+  // Exponentes fraccionarios negativos
+  s = s.replace(/x\^\{-\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac-$1_$2");
+  s = s.replace(/x\^\{\\frac\{-(\d+)\}\{(\d+)\}\}/g, "x^frac-$1_$2");
+  s = s.replace(/x\^\{-(\d+)\/(\d+)\}/g, "x^frac-$1_$2");
+  s = s.replace(/x\^\(-(\d+)\/(\d+)\)/g, "x^frac-$1_$2");
+
+  // Exponentes fraccionarios positivos
+  s = s.replace(/x\^\{\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac$1_$2");
+  s = s.replace(/x\^\{(\d+)\/(\d+)\}/g, "x^frac$1_$2");
+  s = s.replace(/x\^\((\d+)\/(\d+)\)/g, "x^frac$1_$2");
+
+
+
+// x^{\frac12} → x^frac1_2
+s = s.replace(/x\^\{\\frac(-?\d)(-?\d)\}/g, "x^frac$1_$2");
+
+// x^\frac12 → x^frac1_2
+s = s.replace(/x\^\\frac(-?\d)(-?\d)/g, "x^frac$1_$2");
+
+// x^{-\frac12} → x^frac-1_2
+s = s.replace(/x\^\{-\\frac(\d)(\d)\}/g, "x^frac-$1_$2");
+
+// x^-\frac12 → x^frac-1_2
+s = s.replace(/x\^-\\frac(\d)(\d)/g, "x^frac-$1_$2");
+
+// x^{- \frac12}
+s = s.replace(/x\^\{-\s*\\frac(\d)(\d)\}/g, "x^frac-$1_$2");
+
+// x^{- \frac{1}{2}}
+s = s.replace(/x\^\{-\s*\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac-$1_$2");
+
+// x^-\frac12
+s = s.replace(/x\^-\s*\\frac(\d)(\d)/g, "x^frac-$1_$2");
+
+// x^-\frac{1}{2}
+s = s.replace(/x\^-\s*\\frac\{(\d+)\}\{(\d+)\}/g, "x^frac-$1_$2");
+
+// x^{\frac12-1} → x^frac1_2-1
+s = s.replace(/x\^\{\\frac(\d)(\d)-1\}/g, "x^frac$1_$2-1");
+
+// x^{-\frac12-1} → x^frac-1_2-1
+s = s.replace(/x\^\{-\\frac(\d)(\d)-1\}/g, "x^frac-$1_$2-1");
+
+// x^\frac12-1 → x^frac1_2-1
+s = s.replace(/x\^\\frac(\d)(\d)-1/g, "x^frac$1_$2-1");
+
+// x^-\frac12-1 → x^frac-1_2-1
+s = s.replace(/x\^-\\frac(\d)(\d)-1/g, "x^frac-$1_$2-1");
+
+// x^{\frac{1}{2}-1}
+s = s.replace(/x\^\{\\frac\{(-?\d+)\}\{(-?\d+)\}-1\}/g, "x^frac$1_$2-1");
+
+// x^{-\frac{1}{2}-1}
+s = s.replace(/x\^\{-\\frac\{(\d+)\}\{(\d+)\}-1\}/g, "x^frac-$1_$2-1");
+
+// x^{-\frac12} → x^frac-1_2
+s = s.replace(/x\^\{-\\frac(\d)(\d)\}/g, "x^frac-$1_$2");
+
+// x^{\frac12} → x^frac1_2
+s = s.replace(/x\^\{\\frac(\d)(\d)\}/g, "x^frac$1_$2");
+
+// x^-\frac12 → x^frac-1_2
+s = s.replace(/x\^-\\frac(\d)(\d)/g, "x^frac-$1_$2");
+
+// x^\frac12 → x^frac1_2
+s = s.replace(/x\^\\frac(\d)(\d)/g, "x^frac$1_$2");
+
+// x^{-\frac{1}{2}} → x^frac-1_2
+s = s.replace(/x\^\{-\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac-$1_$2");
+
+// x^{\frac{1}{2}} → x^frac1_2
+s = s.replace(/x\^\{\\frac\{(\d+)\}\{(\d+)\}\}/g, "x^frac$1_$2");
+
+  // Coeficientes fraccionarios
+  s = s.replace(/-\\frac\{(\d+)\}\{(\d+)\}/g, "frac-$1_$2");
+  s = s.replace(/\\frac\{(-?\d+)\}\{(-?\d+)\}/g, "frac$1_$2");
+
+// Normalizaciones extra de MathLive
+s = s.replace(/-frac(\d+)([23])(?=x|$)/g, "frac-$1_$2");
+s = s.replace(/(^|[^-])frac(\d+)([23])(?=x|$)/g, "$1frac$2_$3");
+s = s.replace(/-frac(\d+)_(\d+)/g, "frac-$1_$2");
+
+  return s
+    .replace(/\{/g,"")
+    .replace(/\}/g,"")
+    .replace(/\(/g,"")
+    .replace(/\)/g,"")
+    .replace(/\\/g,"")
+    .replace(/\*/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function sameExpr(input, expected){
+  const rawInput = String(input);
+  const rawExpected = String(expected);
+
+  const a = normalizeLatex(input);
+  const b = normalizeLatex(expected);
+
+  console.log("RAW USER:", rawInput);
+  console.log("RAW EXPECTED:", rawExpected);
+  console.log("USER NORMAL:", a);
+  console.log("EXPECTED NORMAL:", b);
+
+  return a === b;
+}
+
+function stepNeedsNegativeFix(){
+  return currentExercise.derivativeExp.num < 0;
+}
+
+function stepNeedsRadicalFix(){
+  return currentExercise.derivativeExp.den !== 1;
+}
+
+function step1IsCorrect(userInput){
+  return sameExpr(userInput, currentExercise.steps[1]);
+}
+
+function step2IsCorrect(userInput){
+  const user = normalizeDerivativeSubstitution(userInput);
+  const expected = normalizeDerivativeSubstitution(currentExercise.steps[2]);
+
+  const coef = currentExercise.a;
+  const exp = currentExercise.initialExp;
+
+  const coefText = `${coef}`;
+  const expText = exp.den === 1
+    ? `${exp.num}`
+    : `frac${exp.num}_${exp.den}`;
+
+  const expPart = exp.den === 1
+    ? `x^${exp.num}-1`
+    : `x^frac${exp.num}_${exp.den}-1`;
+
+  const option1 = `${coefText}${expText}${expPart}`;
+  const option2 = `${expText}${coefText}${expPart}`;
+
+  const cleanOption1 = option1.replace(/\(|\)/g,"");
+  const cleanOption2 = option2.replace(/\(|\)/g,"");
+
+  console.log("STEP2 USER:", user);
+  console.log("STEP2 EXPECTED:", expected);
+  console.log("STEP2 OPTION1:", cleanOption1);
+  console.log("STEP2 OPTION2:", cleanOption2);
+
+  // No permitir resultado ya simplificado
+  if (sameExpr(userInput, currentExercise.steps[3])){
+    return false;
+  }
+
+// Caso especial: coeficiente -1
+// Acepta -(-2)x^{-2-1} como equivalente a (-1)(-2)x^{-2-1}
+if (currentExercise.a === -1){
+  const exp = currentExercise.initialExp;
+
+  const expText = exp.den === 1
+    ? `${exp.num}`
+    : `frac${exp.num}_${exp.den}`;
+
+  const expPart = exp.den === 1
+    ? `x^${exp.num}-1`
+    : `x^frac${exp.num}_${exp.den}-1`;
+
+  const optionA = `-${expText}${expPart}`;
+  const optionB = `${expText}-${expPart}`;
+
+  if (user === optionA || user === optionB){
+    return true;
+  }
+}
+
+  return user === expected || user === cleanOption1 || user === cleanOption2;
+}
+
+function step3IsCorrect(userInput){
+  const user = normalizeDerivativeStep3(userInput);
+  const expected = normalizeDerivativeStep3(currentExercise.steps[3]);
+
+  console.log("STEP3 USER:", user);
+  console.log("STEP3 EXPECTED:", expected);
+
+  return user === expected;
+}
+
+function step4IsCorrect(userInput){
+  if (!stepNeedsNegativeFix()){
+    return false;
+  }
+
+  const clean = normalizeLatex(userInput);
+
+  if (clean.includes("^-")){
+    return false;
+  }
+
+  return sameExpr(userInput, currentExercise.steps[4]);
+}
+
+function step5IsCorrect(userInput){
+  if (!stepNeedsRadicalFix()){
+    return false;
+  }
+
+  return sameExpr(userInput, currentExercise.steps[5]);
+}
+
+function validateWithReason(step,userInput){
+  if (!userInput || !userInput.trim()){
+    return {ok:false, message:"Escribe tu paso primero."};
+  }
+
+  if (step === 1){
+    if (step1IsCorrect(userInput)){
+      return {ok:true, message:"Correcto"};
+    }
+
+    return {ok:false, message:"Convierte correctamente la expresión a potencia de x."};
+  }
+
+  if (step === 2){
+    if (step2IsCorrect(userInput)){
+      return {ok:true, message:"Correcto"};
+    }
+
+    return {ok:false, message:"Sustituye en la fórmula sin simplificar. Ejemplo: 6(-4)x^(-4-1)."};
+  }
+
+  if (step === 3){
+    if (step3IsCorrect(userInput)){
+      return {ok:true, message:"Correcto"};
+    }
+
+    return {ok:false, message:"Simplifica coeficiente y exponente."};
+  }
+
+  if (step === 4){
+    if (step4IsCorrect(userInput)){
+      return {ok:true, message:"Correcto"};
+    }
+
+    return {ok:false, message:"Si hay exponente negativo, pásalo al denominador con exponente positivo."};
+  }
+
+  if (step === 5){
+    if (step5IsCorrect(userInput)){
+      return {ok:true, message:"Correcto"};
+    }
+
+    return {ok:false, message:"Si queda exponente fraccionario, conviértelo a radical."};
+  }
+
+  return {ok:false, message:"Error inesperado."};
+}
+
+function setProblem(){
+  currentExercise = buildExercise();
+
+  document.getElementById("problemLatex").innerHTML =
+    `\\(${currentExercise.problem}\\)`;
+
+  if (window.MathJax){
+    MathJax.typesetPromise();
+  }
+
+  console.log("Ejercicio actual:", currentExercise);
+  console.log("Pasos esperados:", currentExercise.steps);
+}
+
+function resetUI(){
+  for(let i = 1; i <= 5; i++){
+    attempts[i] = 0;
+
+    const mf = document.getElementById(`mf-${i}`);
+    const btn = document.getElementById(`btn-${i}`);
+    const naBtn = document.getElementById(`na-${i}`);
+
+    mf.value = "";
+    mf.disabled = i !== 1;
+    btn.disabled = i !== 1;
+
+    if (naBtn) naBtn.disabled = true;
+
+    document.getElementById(`fb-${i}`).textContent = "";
+    document.getElementById(`fb-${i}`).className = "feedback";
+    document.getElementById(`hint-${i}`).textContent = "";
+    document.getElementById(`attempts-${i}`).textContent = "Intentos: 0/3";
+  }
+}
+
+function enableStep(n){
+  document.getElementById(`mf-${n}`).disabled = false;
+  document.getElementById(`btn-${n}`).disabled = false;
+
+  const naBtn = document.getElementById(`na-${n}`);
+  if (naBtn) naBtn.disabled = false;
+
+  document.getElementById(`mf-${n}`).focus();
+}
+
+function setFeedback(step,text,cls){
+  const fb = document.getElementById(`fb-${step}`);
+  fb.textContent = text;
+  fb.className = `feedback ${cls}`;
+}
+
+function failExercise(step){
+  for(let i = 1; i <= 5; i++){
+    document.getElementById(`mf-${i}`).disabled = true;
+    document.getElementById(`btn-${i}`).disabled = true;
+
+    const naBtn = document.getElementById(`na-${i}`);
+    if (naBtn) naBtn.disabled = true;
+  }
+
+  setFeedback(step,"❌ Ejercicio bloqueado. Presiona Nuevo ejercicio para intentar otro.","bad");
+}
+
+function reviewNotApply(step){
+  if (step === 4){
+    if (!stepNeedsNegativeFix()){
+      setFeedback(4,"✅ Correcto: no aplica.","ok");
+
+      document.getElementById("mf-4").disabled = true;
+      document.getElementById("btn-4").disabled = true;
+      document.getElementById("na-4").disabled = true;
+
+      enableStep(5);
+      return;
+    }
+
+    setFeedback(4,"❌ Sí aplica: debes eliminar el exponente negativo.","bad");
+    return;
+  }
+
+  if (step === 5){
+    if (!stepNeedsRadicalFix()){
+      setFeedback(5,"✅ Correcto: no aplica.","ok");
+
+      document.getElementById("mf-5").disabled = true;
+      document.getElementById("btn-5").disabled = true;
+      document.getElementById("na-5").disabled = true;
+
+      return;
+    }
+
+    setFeedback(5,"❌ Sí aplica: debes convertir el exponente fraccionario a radical.","bad");
+  }
+}
+
+function reviewStep(step){
+  const mf = document.getElementById(`mf-${step}`);
+  const userInput = mf.value;
+
+  if (attempts[step] >= 3){
+    failExercise(step);
+    return;
+  }
+
+  attempts[step]++;
+  document.getElementById(`attempts-${step}`).textContent =
+    `Intentos: ${attempts[step]}/3`;
+
+  const result = validateWithReason(step,userInput);
+
+  if (result.ok){
+    setFeedback(step,"✅ Correcto","ok");
+    document.getElementById(`hint-${step}`).textContent = "";
+
+    mf.disabled = true;
+    document.getElementById(`btn-${step}`).disabled = true;
+
+    const naBtn = document.getElementById(`na-${step}`);
+    if (naBtn) naBtn.disabled = true;
+
+    if (step < 5){
+      enableStep(step + 1);
+    }
+
+    return;
+  }
+
+  setFeedback(step,`❌ ${result.message}`,"bad");
+
+  if (attempts[step] >= 2){
+    document.getElementById(`hint-${step}`).textContent =
+      `💡 Sugerencia: ${currentExercise.hints[step]}`;
+  }
+
+  if (attempts[step] >= 3){
+    failExercise(step);
+  }
+}
+
+function initButtons(){
+  for(let i = 1; i <= 5; i++){
+    document.getElementById(`btn-${i}`).addEventListener("click", () => reviewStep(i));
+  }
+
+  document.getElementById("na-4").addEventListener("click", () => reviewNotApply(4));
+  document.getElementById("na-5").addEventListener("click", () => reviewNotApply(5));
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    setProblem();
+    resetUI();
+  });
+}
+
+function initFilters(){
+  document.querySelectorAll('.filter-box input[type="checkbox"]').forEach(check => {
+    check.addEventListener("change", () => {
+      setProblem();
+      resetUI();
+    });
+  });
+}
+
+function init(){
+  setProblem();
+  resetUI();
+  initButtons();
+  initFilters();
+}
+
+window.addEventListener("load", init);
+</script>
+</body>
+</html>
